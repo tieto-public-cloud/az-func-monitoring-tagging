@@ -1,0 +1,32 @@
+{
+  "bindings": [
+    {
+      "name": "Timer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 * * * * *"
+    },
+    {
+      "name": "inputTable",
+      "tableName": "ResTags",
+      "connection": "AzureWebJobsStorage",
+      "direction": "in",
+      "type": "table"
+    },
+    {
+      "name": "output2Table",
+      "direction": "out",
+      "type": "table",
+      "tableName": "ResTags",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "name": "configTable",
+      "tableName": "Config",
+      "take": 1,
+      "connection": "AzureWebJobsStorage",
+      "direction": "in",
+      "type": "table"
+    }
+  ]
+}
