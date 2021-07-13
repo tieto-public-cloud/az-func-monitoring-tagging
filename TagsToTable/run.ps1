@@ -50,7 +50,8 @@ function PushDataToTable {
 }
 
 $TableName          = "ResTags"
-
+Import-Module Az
+Import-Module AzTable
 Write-Output "Config: $($configTable[0])"
 $ResourceGroupName  = $configTable[0].ResourceGroupName
 $StorageAccountName = $configTable[0].StorageAccountName
