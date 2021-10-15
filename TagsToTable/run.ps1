@@ -53,15 +53,16 @@ $TableName          = "ResTags"
 Import-Module Az
 Import-Module AzTable
 Write-Output "Config: $($configTable[0])"
-$ResourceGroupName  = $configTable[0].ResourceGroupName
-$StorageAccountName = $configTable[0].StorageAccountName
-$WorkspaceName      = $configTable[0].WorkspaceName
-$Delta              = $configTable[0].Delta # Delta in seconds - if last record in table is older then it will recreate table (to be able to set it once in x hours)
+$ResourceGroupName          = $configTable[0].ResourceGroupName
+$StorageAccountName         = $configTable[0].StorageAccountName
+$StorageAccountResGroupName = $configTable[0].StorageAccountResGroupName
+$WorkspaceName              = $configTable[0].WorkspaceName
+$Delta                      = $configTable[0].Delta # Delta in seconds - if last record in table is older then it will recreate table (to be able to set it once in x hours)
 
 Write-Output "Res Group: $ResourceGroupName"
 
 $WorkspaceKey       = $(Get-AzOperationalInsightsWorkspace -ResourceGroupName $ResourceGroupName -Name $WorkspaceName | Get-AzOperationalInsightsWorkspaceSharedKey).PrimarySharedKey
-$StorageAccount     = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
+$StorageAccount     = Get-AzStorageAccount -ResourceGroupName $StorageAccountResGroupName -Name $StorageAccountName
 $Context            = $StorageAccount.Context
 
 $Timestamp          = $(Get-Date -UFormat %s)
