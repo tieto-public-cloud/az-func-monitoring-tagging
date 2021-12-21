@@ -53,10 +53,11 @@ $TableName          = "ResTags"
 Import-Module Az
 Import-Module AzTable
 Write-Output "Config: $($configTable[0])"
-$ResourceGroupName          = $configTable[0].ResourceGroupName
+$TargetSubscriptionId       = $configTable[0].TargetSubscriptionId
 $StorageAccountName         = $configTable[0].StorageAccountName
 $StorageAccountResGroupName = $configTable[0].StorageAccountResGroupName
 $WorkspaceName              = $configTable[0].WorkspaceName
+$ResourceGroupName          = $configTable[0].ResourceGroupName
 $Delta                      = $configTable[0].Delta # Delta in seconds - if last record in table is older then it will recreate table (to be able to set it once in x hours)
 
 Write-Output "Res Group: $ResourceGroupName"
@@ -85,7 +86,10 @@ if ($TableData.length -ne 0){
 $Table = (Get-AzStorageTable -context $Context -name $TableName).CloudTable
 
 if (($Timestamp - $(Get-AzTableRow -table $Table -Top 1).PartitionKey) -gt $Delta ) {
+    $LogonContext = Get-AzContext
+    Set-AzContext -Subscription $TargetSubscriptionId
     $Resources = $(Get-AzResource | Where-Object {$null -ne $_.Tags -and $_.Tags.Count -gt 0} | Select-Object -property ResourceId, Tags )
+    Set-AzContext $LogonContext
     CleanTable
     PushDataToTable -Resources $Resources
 }
