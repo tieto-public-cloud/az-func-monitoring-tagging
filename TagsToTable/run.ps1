@@ -79,7 +79,7 @@ if ($TableData.length -ne 0){
     $BodyJson = New-Object System.Collections.ArrayList
     foreach ($Row in $TableData){
         $Id = $Row.RowKey.replace('|','/')
-        $BodyJson.Add(@{"Id"=$Id;"Tags"=$Row.Tags})
+        $BodyJson.Add(@{"Id"=$Id;"Tags"=$Row.Tags}) | Out-Null
     }
     $BodyJson = $BodyJson | ConvertTo-Json -Compress
     $res = PostLogData -customerId $customerId -sharedKey $WorkspaceKey -body $BodyJson -logType 'TagData'
